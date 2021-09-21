@@ -27,10 +27,16 @@ const App: React.FC<AppProps> = () => {
       isComplete: true,
     },
   ];
-  const counter = useRef(defaults.length);
   const [todos, setTodos] = useState<TodoInterface[]>(defaults);
   const [input, setInput] = useState("");
 
+  type InputEvent = React.ChangeEvent<HTMLInputElement>;
+  const handleChanges = (e: InputEvent) => {
+    e.preventDefault()
+    setInput(e.target.value)
+  }
+
+  
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -38,10 +44,10 @@ const App: React.FC<AppProps> = () => {
       <div
         style={{ display: "flex", justifyContent: "center", marginBottom: 50 }}
       >
-        <input type="text" placeholder="Add a todo!" value={input} />
+        <input type="text" placeholder="Add a todo!" value={input} onChange = {handleChanges} />
         <button
           onClick={() => {
-            setTodos((prev) => [...prev, { body: input, id: counter.current }]);
+            setTodos((prev) => [...prev, { id: Date.now(), body: input, isComplete: false }]);
             setInput("");
           }}
         >
@@ -49,7 +55,7 @@ const App: React.FC<AppProps> = () => {
         </button>
       </div>
       {todos.map((todo) => (
-        <div
+        <div key = {todo.id}
           style={{
             border: todo.isComplete ? "1px solid darkgreen" : "1px solid grey",
             display: "flex",
@@ -73,15 +79,16 @@ const App: React.FC<AppProps> = () => {
               <input
                 id={`${todo.body}-checkbox`}
                 type="checkbox"
-                checked={todo.isComplete}
-                onClick={() => {
-                  todo.isComplete = true;
+                checked={todo.isComplete === true}
+                onChange = {() => {
+                  todo.isComplete === true ? todo.isComplete = false : todo.isComplete = true;
+                  setTodos([...todos])
                 }}
               />
             </div>
             <button
               onClick={() => {
-                setTodos(todos.filter(({ id }) => id === todo.id));
+                setTodos(todos.filter(({ id }) => id !== todo.id ));
               }}
             >
               Delete
