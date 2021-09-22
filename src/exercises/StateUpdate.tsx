@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Grid, Typography, Paper } from "@material-ui/core";
 
 /// -------------------- Begin Exercise Code -------------------- ///
@@ -6,42 +6,87 @@ import { Grid, Typography, Paper } from "@material-ui/core";
 /// are relevant to the excerise. You can ignore all other code
 
 interface AppProps {}
-
+const initialToppings = {
+  all: false,
+  pepperoni: false,
+  spinach: false,
+  basil: false,
+  pineapple: false,
+  bacon: false
+}
 const App: React.FC<AppProps> = () => {
+  const [toppings, setToppings] = useState(initialToppings)
+
+  const favToppings: string[] = []
+
+  toppings.pepperoni ? favToppings.push("Pepperoni") : favToppings.filter(item => item !== "Pepperoni")
+  toppings.spinach ? favToppings.push("Spinach") : favToppings.filter(item => item !== "Spinach")
+  toppings.basil ? favToppings.push("Basil") : favToppings.filter(item => item !== "Basil")
+  toppings.pineapple ? favToppings.push("Pineapple") : favToppings.filter(item => item !== "Pineapple")
+  toppings.bacon ? favToppings.push("Bacon") : favToppings.filter(item => item !== "Bacon")
+
+  if(toppings.pepperoni !== true || toppings.spinach !== true || toppings.basil !== true || toppings.pineapple !== true || toppings.bacon !== true){
+    toppings.all = false
+  } else {
+    toppings.all = true
+  }
+  const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.name === "all"){
+      setToppings({
+        ...toppings,
+        all: e.target.checked,
+        pepperoni: e.target.checked,
+        spinach: e.target.checked,
+        basil: e.target.checked,
+        pineapple: e.target.checked,
+        bacon: e.target.checked,
+      })
+    }
+    else {
+      setToppings({
+      ...toppings,
+      [e.target.name]: e.target.checked
+      }
+    )
+  }}
   return (
     <div style={{ display: "flex", justifyContent: "space-around" }}>
       <div>
         <h3>What are your favorite pizza topings?</h3>
         <div style={{ paddingBottom: 10 }}>
           <label htmlFor="all">Select all</label>
-          <input type="checkbox" name="all" value="all" />
+          <input type="checkbox" name="all" value="all" checked = {toppings.all} onChange={handleCheckBoxChange}/>
         </div>
         <div>
           <label htmlFor="Pepperoni">Pepperoni</label>
-          <input type="checkbox" name="Pepperoni" value="Pepperoni" />
+          <input type="checkbox" name="pepperoni"  value="Pepperoni" checked = {toppings.pepperoni} onChange={handleCheckBoxChange}/>
         </div>
         <div>
           <label htmlFor="Spinach">Spinach</label>
-          <input type="checkbox" name="Spinach" value="Spinach" />
+          <input type="checkbox" name="spinach" value="Spinach" checked = {toppings.spinach} onChange={handleCheckBoxChange}/>
         </div>
         <div>
           <label htmlFor="Basil">Basil</label>
-          <input type="checkbox" name="Basil" value="Basil" />
+          <input type="checkbox" name="basil" value="Basil" checked = {toppings.basil} onChange={handleCheckBoxChange}/>
         </div>
         <div>
           <label htmlFor="Pineapple">Pineapple</label>
-          <input type="checkbox" name="Pineapple" value="Pineapple" />
+          <input type="checkbox" name="pineapple" value="Pineapple" checked = {toppings.pineapple} onChange={handleCheckBoxChange} />
         </div>
         <div>
           <label htmlFor="Bacon">Bacon</label>
-          <input type="checkbox" name="Bacon" value="Bacon" />
+          <input type="checkbox" name="bacon" value="Bacon" checked = {toppings.bacon} onChange={handleCheckBoxChange}/>
         </div>
       </div>
       <div>
         <h3>Your favorite pizza toppings are:</h3>
         <div>
           {
-            // This may be where you want some of your code to go!
+            favToppings.map(topping => {
+              return (
+                <h3 key={topping}>{topping}</h3>
+              )
+            })
           }
         </div>
       </div>

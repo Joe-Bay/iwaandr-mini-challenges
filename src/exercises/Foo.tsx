@@ -7,7 +7,18 @@ import { Grid, Typography, Paper, Button } from "@material-ui/core";
 
 function fooBarBaz(count = 30) {
   for (let i = 1; i <= count; i++) {
-    console.log(i);
+    if(i % 3 === 0 && i % 5 === 0){
+      console.log('baz')
+    }
+    else if(i % 3 === 0){
+      console.log('foo')
+    }
+    else if (i % 5 === 0){
+      console.log('bar')
+    }
+    else {
+      console.log(i)
+    }
   }
 }
 
